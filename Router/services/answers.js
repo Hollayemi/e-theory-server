@@ -36,8 +36,8 @@ const saveResults = async (req, res, client) => {
             let score = response.data?.similarity_percentage?.toFixed()
             const scoreFromSimilarity = (score / 100) * 50;
             const answerWords = each[0].ans.toLowerCase().split(" ");
-            const keywordMatches = exam.keyword.filter((keyword) => answerWords.includes(keyword));
-            const percentageKeywordsFound = (keywordMatches.length / keywords.length) * 100;
+            const keywordMatches = exam.keyword.filter((keyword) => answerWords.includes(keyword.toLowerCase()));
+            const percentageKeywordsFound = (keywordMatches.length / exam.keyword.length) * 100;
             const scoreFromKeywords = (percentageKeywordsFound / 100) * 50;
             const totalAnswerScore = scoreFromSimilarity + scoreFromKeywords;
 
@@ -56,14 +56,22 @@ const saveResults = async (req, res, client) => {
     course_code,
     answers: ansObj,
     regNo,
-    score: totalScore,
+    score: percentageOfTotalScore,
     studentId: userInfo._id,
     }).save();
 
     return res.status(200).send({ total: percentageOfTotalScore });
   
 }
+
+const studentResult = async (req, res, client) => {
+    const { regNo } = req.query
+    if(!regNo) return res.status(422).send("Error: Reg no is required!!!");
+    const results = await AnswerSchema.find({regNo  })
+    return res.status(200).send(results)
+}
   
 module.exports = {
   saveResults,
+  studentResult
 }

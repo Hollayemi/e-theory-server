@@ -21,7 +21,7 @@ const staffLoginHandle = (req, res) => {login.staff(req, res)};
 
 //Student module services
 const saveResults = (req, res) => {answers.saveResults(req, res)};
-// const getStudentResults = (req, res) => {result.studentResult(req, res)};
+const getStudentResults = (req, res) => {answers.studentResult(req, res)};
 // const getIndividualResult = (req, res) => {result.specificResult(req, res)};
 // const updateResult = (req, res) => {result.updateSingleResult(req, res)};
 // const results = (req, res) => {result.allResult(req, res)};
@@ -47,8 +47,8 @@ module.exports = {
   saveResults,
   // results,
   // getIndividualResult,
-  // getStudentResults,
   // updateResult,
+  getStudentResults,
   getQuestion,
   loadQuestion,
   getExamQuestions,
