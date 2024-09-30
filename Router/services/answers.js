@@ -15,33 +15,27 @@ const saveResults = async (req, res, client) => {
     const eachAns = Object.values(answers);
 
     // Calculate total possible score
-    const maxScorePerAnswer = 100; // 70 from similarity + 30 from keywords
+    const maxScorePerAnswer = 100; // 50 from similarity + 50 from keywords
     const totalPossibleScore = eachAns.length * maxScorePerAnswer;
-
-
-    // Use Promise.all to wait for all the async operations to complete
     await Promise.all(
         eachAns.map(async (each) => {
-            const exam = await ExamSchema.findById(each[0].examId).lean();
-            console.log(exam.ans, each[0].ans);
+            const exam = await ExamSchema.findById(each.examId).lean();
+            console.log(exam.ans, each.ans);
 
             const response = await Axios.post(
             "https://sentence-relation.onrender.com/similarity",
-            {
-                sentence1: each[0].ans,
-                sentence2: exam.ans,
-            }
+            { sentence1: each.ans, sentence2: exam.ans,}
             );
 
             let score = response.data?.similarity_percentage?.toFixed()
             const scoreFromSimilarity = (score / 100) * 50;
-            const answerWords = each[0].ans.toLowerCase().split(" ");
+            const answerWords = each.ans.toLowerCase().split(" ");
             const keywordMatches = exam.keyword.filter((keyword) => answerWords.includes(keyword.toLowerCase()));
             const percentageKeywordsFound = (keywordMatches.length / exam.keyword.length) * 100;
             const scoreFromKeywords = (percentageKeywordsFound / 100) * 50;
             const totalAnswerScore = scoreFromSimilarity + scoreFromKeywords;
 
-            ansObj = { ...ansObj, [each[0].examId]: each[0].ans };
+            ansObj = { ...ansObj, [each.examId]: each.ans };
             totalScore += totalAnswerScore;
         })
     );

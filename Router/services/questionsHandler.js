@@ -1,7 +1,7 @@
 const ExamSchema = require("../../models/exams")
 
 const getQuestions = async (req, res) => {
-  let exams = await ExamSchema.find({ start: true })
+  let exams = await ExamSchema.find()
   
     if(!exams) return res.status(422).send("No Question");
     res.status(200).send(exams);

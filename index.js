@@ -27,11 +27,6 @@ app.post('/staff/login', router.staffLoginHandle);
 
 app.post('/result/upload', router.saveResults);
 app.get('/results', router.getStudentResults);
-// app.put('/result/update', router.updateResult);
-
-// app.get('/results/student', router.getStudentResults);
-// app.get('/result/:code', router.getIndividualResult);
-// app.get('/results/:code', router.courseResults);
 
 app.post('/question', router.loadQuestion);
 app.get('/question', router.getQuestion);
